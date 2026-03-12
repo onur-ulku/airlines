@@ -1,0 +1,8 @@
+#Shell Script run config çıktısı ignore
+text
+text/
+
+# Frontend
+frontend/node_modules
+frontend/.vite
+frontend/dist

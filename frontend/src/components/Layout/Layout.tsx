@@ -1,0 +1,15 @@
+import React from "react";
+import Header from "./Header";
+import Sidebar from "./Sidebar";
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="app-shell">
+      <Header />
+      <div className="app-body">
+        <Sidebar />
+        <main className="app-content">{children}</main>
+      </div>
+    </div>
+  );
+}

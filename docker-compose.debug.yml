@@ -1,0 +1,14 @@
+# IntelliJ ↔ Container içindeki JVM
+#
+# ÖNEMLİ SIRA:
+# 1) IntelliJ → Run → "Backend Docker Debug (Listen)" → Debug çalıştır.
+# 2) Sonra bu komutu çalıştır: docker compose -f docker-compose.yml -f docker-compose.debug.yml up --build
+#
+version: "3.8"
+
+services:
+  airlines-backend:
+    environment:
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=n,address=host.docker.internal:5005,suspend=n
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
