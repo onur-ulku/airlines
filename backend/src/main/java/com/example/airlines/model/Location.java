@@ -68,5 +68,10 @@ public class Location {
     public void setCode(String code) {
         this.code = code;
     }
+
+    @Override
+    public String toString() {
+        return "Location(id=" + id + ", name=" + name + ", city=" + city + ", country=" + country + ", code=" + code + ")";
+    }
 }
 

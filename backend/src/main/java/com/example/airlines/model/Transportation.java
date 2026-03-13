@@ -98,4 +98,11 @@ public class Transportation {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        Long originId = origin != null ? origin.getId() : null;
+        Long destId = destination != null ? destination.getId() : null;
+        return "Transportation(id=" + id + ", type=" + type + ", originId=" + originId + ", destinationId=" + destId + ", operatingDays=" + getOperatingDays() + ")";
+    }
 }
