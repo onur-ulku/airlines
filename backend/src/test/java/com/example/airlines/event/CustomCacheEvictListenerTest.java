@@ -11,32 +11,36 @@ import org.springframework.cache.CacheManager;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class RoutesCacheEvictListenerTest {
+class CustomCacheEvictListenerTest {
 
     @Mock
     CacheManager cacheManager;
     @Mock
     Cache cache;
     @InjectMocks
-    RoutesCacheEvictListener listener;
+    CustomCacheEvictListener listener;
 
     @Test
-    void onTransportationsChanged_clearsRoutesCache() {
+    void onTransportationsChanged_clearsRoutesAndTransportationsCache() {
         when(cacheManager.getCache("routes")).thenReturn(cache);
+        when(cacheManager.getCache("transportations")).thenReturn(cache);
 
         listener.onTransportationsChanged(new TransportationsChangedEvent(this));
 
         verify(cacheManager).getCache("routes");
-        verify(cache).clear();
+        verify(cacheManager).getCache("transportations");
+        verify(cache, times(2)).clear();
     }
 
     @Test
     void onTransportationsChanged_cacheNull_doesNotThrow() {
         when(cacheManager.getCache("routes")).thenReturn(null);
+        when(cacheManager.getCache("transportations")).thenReturn(null);
 
         listener.onTransportationsChanged(new TransportationsChangedEvent(this));
 
         verify(cacheManager).getCache("routes");
+        verify(cacheManager).getCache("transportations");
         verify(cache, never()).clear();
     }
 }

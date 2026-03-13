@@ -6,6 +6,7 @@ import com.example.airlines.repository.LocationRepository;
 import com.example.airlines.repository.TransportationRepository;
 import com.example.airlines.event.TransportationsChangedEvent;
 import com.example.airlines.service.TransportationService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,11 +30,13 @@ public class TransportationServiceImpl implements TransportationService {
     }
 
     @Override
+    @Cacheable(cacheNames = "transportations", key = "'all'")
     public List<Transportation> findAll() {
         return transportationRepository.findAll();
     }
 
     @Override
+    @Cacheable(cacheNames = "transportations", key = "#id")
     public Transportation findById(Long id) {
         return transportationRepository.findById(id).orElseThrow();
     }

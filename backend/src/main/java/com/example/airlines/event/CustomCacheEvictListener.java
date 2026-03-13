@@ -5,17 +5,22 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RoutesCacheEvictListener {
+public class CustomCacheEvictListener {
 
     private final CacheManager cacheManager;
 
-    public RoutesCacheEvictListener(CacheManager cacheManager) {
+    public CustomCacheEvictListener(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
 
     @EventListener
     public void onTransportationsChanged(TransportationsChangedEvent event) {
-        var cache = cacheManager.getCache("routes");
+        evictCache("routes");
+        evictCache("transportations");
+    }
+
+    private void evictCache(String cacheName) {
+        var cache = cacheManager.getCache(cacheName);
         if (cache != null) {
             cache.clear();
         }

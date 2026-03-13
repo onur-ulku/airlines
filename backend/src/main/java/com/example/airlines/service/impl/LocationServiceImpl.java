@@ -5,6 +5,8 @@ import com.example.airlines.model.Location;
 import com.example.airlines.repository.LocationRepository;
 import com.example.airlines.repository.TransportationRepository;
 import com.example.airlines.service.LocationService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,21 +26,25 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    @Cacheable(cacheNames = "locations", key = "'all'")
     public List<Location> findAll() {
         return locationRepository.findAll();
     }
 
     @Override
+    @Cacheable(cacheNames = "locations", key = "#id")
     public Location findById(Long id) {
         return locationRepository.findById(id).orElseThrow();
     }
 
     @Override
+    @CacheEvict(cacheNames = "locations", allEntries = true)
     public Location create(Location location) {
         return locationRepository.save(location);
     }
 
     @Override
+    @CacheEvict(cacheNames = "locations", allEntries = true)
     public Location update(Long id, Location updated) {
         Location existing = findById(id);
         existing.setName(updated.getName());
@@ -50,6 +56,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = {"locations", "routes"}, allEntries = true)
     public void delete(Long id) {
         if (transportationRepository.existsByOriginIdOrDestinationId(id)) {
             throw new CustomException(
