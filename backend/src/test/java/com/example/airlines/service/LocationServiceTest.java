@@ -1,5 +1,6 @@
 package com.example.airlines.service;
 
+import com.example.airlines.exception.CustomException;
 import com.example.airlines.model.Location;
 import com.example.airlines.repository.LocationRepository;
 import com.example.airlines.repository.TransportationRepository;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -95,8 +95,8 @@ class LocationServiceTest {
         when(transportationRepository.existsByOriginIdOrDestinationId(5L)).thenReturn(true);
 
         assertThatThrownBy(() -> locationService.delete(5L))
-                .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("Location is used by");
+                .isInstanceOf(CustomException.class)
+                .hasMessageContaining("This location is used by one or more transportations");
         verify(locationRepository, never()).deleteById(anyLong());
     }
 }

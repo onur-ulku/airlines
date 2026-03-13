@@ -1,5 +1,6 @@
 package com.example.airlines.service.impl;
 
+import com.example.airlines.exception.CustomException;
 import com.example.airlines.model.Location;
 import com.example.airlines.repository.LocationRepository;
 import com.example.airlines.repository.TransportationRepository;
@@ -7,7 +8,6 @@ import com.example.airlines.service.LocationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -52,8 +52,11 @@ public class LocationServiceImpl implements LocationService {
     @Transactional
     public void delete(Long id) {
         if (transportationRepository.existsByOriginIdOrDestinationId(id)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "Location is used by one or more transportations and cannot be deleted.");
+            throw new CustomException(
+                    "LOCATION_IN_USE",
+                    "This location is used by one or more transportations and cannot be deleted.",
+                    HttpStatus.CONFLICT
+            );
         }
         locationRepository.deleteById(id);
     }
